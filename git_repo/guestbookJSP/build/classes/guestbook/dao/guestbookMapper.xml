@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="guestbookSQL">
+  <insert id="write" parameterType="map">
+     insert into guestbook values(seq_guestbook.nextval,#{name},#{email},#{homepage},#{subject},#{content},sysdate)
+  </insert>
+  
+  <select id="list" parameterType="map" resultType="guest">
+	select * from(select rownum rn, tt. * from(select seq,name,email,homepage,subject,content,to_char(logtime,'YYYY-MM-DD') as logtime
+				 	from guestbook order by seq desc) tt)
+					 where rn>=#{startNum} and rn <![CDATA[<]]>= #{endNum}
+  </select>
+  <select id="gettotala"  resultType="int">
+  	select count(*)from guestbook
+  </select>
+</mapper>
+
+<!-- #{}같은이름의 컬럼을 찾아간다 -->
